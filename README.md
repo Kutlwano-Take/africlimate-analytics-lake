@@ -46,6 +46,13 @@ s3://africlimate-analytics-lake/
 - **Coverage**: Southern Africa region (2020-2025 timeframe)
 - **File size**: Approximately 5.5MB per monthly file
 
+## Security Considerations
+- **No AWS credentials** stored in this repository
+- **IAM roles** use least privilege principle
+- **Public data only** - CHIRPS climate data is openly available
+- **Configuration files** contain only non-sensitive metadata
+- **.gitignore** prevents accidental credential commits
+
 ## AWS Services Utilized
 - **Amazon S3**: Primary storage for raw and processed data
 - **AWS Glue**: Data catalog and metadata management

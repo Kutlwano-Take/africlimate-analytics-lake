@@ -25,31 +25,67 @@ venv/
 env/
 ENV/
 
-# AWS Credentials
+# AWS Credentials - CRITICAL SECURITY
 .aws/
 *.pem
 *.key
+*.p12
+*.crt
+*.cer
+credentials
+config
+
+# AWS Specific Sensitive Files
+accessKeys.csv
+*.csv
+*.json.bak
+*.json.tmp
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-*
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Logs
 *.log
+logs/
 
 # Temporary files
 *.tmp
 *.temp
+*.bak
+*.swp
+*~
 
 # Large data files (keep sample, exclude full dataset)
 *.tif
 !chirps-v2.0_2024.01.tif
+*.tiff
+*.hdf
+*.nc
 
 # Jupyter Notebooks
 .ipynb_checkpoints
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Backup files
+*.backup
+*.old
