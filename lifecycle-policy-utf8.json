@@ -1,0 +1,14 @@
+﻿{
+  "Rules": [
+    {
+      "ID": "DataLakeLifecycle",
+      "Status": "Enabled",
+      "Filter": {"Prefix": ""},
+      "Transitions": [
+        {"Days": 30, "StorageClass": "GLACIER"},
+        {"Days": 90, "StorageClass": "DEEP_ARCHIVE"}
+      ],
+      "Expiration": {"Days": 365}
+    }
+  ]
+}
