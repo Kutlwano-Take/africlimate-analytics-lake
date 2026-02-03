@@ -1,0 +1,20 @@
+{
+  "Description": "Africlimate ETL Lambda function for CHIRPS climate data processing",
+  "Runtime": "python3.9",
+  "Handler": "lambda_etl_function.lambda_handler",
+  "Role": "arn:aws:iam::YOUR-ACCOUNT-ID:role/AfriclimateLambdaRole",
+  "Timeout": 900,
+  "MemorySize": 512,
+  "Environment": {
+    "Variables": {
+      "PROCESSED_BUCKET": "africlimate-analytics-lake",
+      "PROCESSED_PREFIX": "processed/enriched_climate/",
+      "LOG_LEVEL": "INFO"
+    }
+  },
+  "Layers": [],
+  "Code": {
+    "S3Bucket": "africlimate-analytics-lake",
+    "S3Key": "lambda/lambda_etl_function.zip"
+  }
+}
