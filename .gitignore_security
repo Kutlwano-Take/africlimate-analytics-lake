@@ -1,0 +1,76 @@
+# AfriClimate Analytics Lake - Security Protection
+
+# Private information patterns (never commit these)
+*.pem
+*.key
+*.p12
+*.pfx
+aws_credentials.json
+aws_credentials_public.json
+.env
+.env.local
+.env.production
+secrets/
+credentials/
+
+# AWS specific
+.aws/
+.aws/credentials
+.aws/config
+boto3_credentials.json
+
+# Sensitive configuration files
+config_production.json
+secrets_config.json
+database_credentials.json
+api_keys.json
+
+# Logs with sensitive data
+*.log
+logs/
+error_logs/
+access_logs/
+
+# Temporary files with credentials
+temp_credentials/
+tmp_access_keys/
+real_secrets/
+
+# IDE specific with potential credentials
+.vscode/settings.json
+.idea/workspace.xml
+*.swp
+*.swo
+
+# Backup files that might contain credentials
+*.bak
+*.backup
+*.old
+*_backup.*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Python cache (might contain credentials in memory)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebooks (might have credentials in cells)
+*.ipynb
+
+# Documentation with potential sensitive examples
+docs/secrets.md
+docs/api_keys.md
+docs/credentials.md

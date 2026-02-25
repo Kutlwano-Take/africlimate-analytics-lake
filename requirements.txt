@@ -1,0 +1,30 @@
+# AfriClimate Analytics Lake - Python Dependencies
+# Render.com compatible version
+
+# AWS SDK
+boto3>=1.26.0
+botocore>=1.29.0
+awswrangler>=2.20.0
+
+# Data processing
+pandas>=1.5.0
+numpy>=1.24.0
+
+# Web requests
+requests>=2.28.0
+urllib3>=1.26.0
+
+# Dashboard and visualization
+dash>=2.14.0
+plotly>=5.15.0
+dash-bootstrap-components>=1.5.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# Date/time handling
+python-dateutil>=2.8.0
+
+# Optional: For advanced visualizations
+matplotlib>=3.7.0
+seaborn>=0.12.0
