@@ -372,4 +372,4 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT', 8050))
     debug = os.getenv('DASH_DEBUG_MODE', 'False').lower() == 'true'
     host = os.getenv('DASH_HOST', '0.0.0.0')
-    app.run_server(debug=debug, host=host, port=port)
+    app.run(debug=debug, host=host, port=port)
