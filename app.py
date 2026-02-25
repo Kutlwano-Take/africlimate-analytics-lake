@@ -30,11 +30,10 @@ def load_data():
     try:
         # Query data from Athena
         query = '''
-        SELECT latitude, longitude, precipitation, year, month, day, 
-               year_month, date, drought_level, province, season, climate_risk
+        SELECT latitude, longitude, precipitation, year, month, day
         FROM africlimate_climate_db.chirps_data
         WHERE year = 2023
-        ORDER BY year_month, latitude, longitude
+        ORDER BY latitude, longitude
         '''
         
         df = wr.athena.read_sql_query(query, database="africlimate_climate_db")
@@ -70,6 +69,15 @@ def load_data():
             (row['season'] == 'Summer') * 0.2 +  # Summer heat stress
             (abs(row['latitude']) > 30) * 0.1  # Geographic extremity risk
         ), axis=1)
+        
+        # Add date column
+        df['date'] = pd.to_datetime(df[['year', 'month', 'day']])
+        
+        # Add year_month column
+        df['year_month'] = df['year'].astype(str) + '-' + df['month'].astype(str).str.zfill(2)
+        
+        # Add drought_level column
+        df['drought_level'] = df['precipitation'].apply(lambda x: 'Low' if x > 75 else 'Moderate' if x > 50 else 'Severe' if x > 25 else 'Extreme')
         
         print(f"Provinces: {df['province'].unique()}")
         print(f"Years: {df['year'].unique()}")
