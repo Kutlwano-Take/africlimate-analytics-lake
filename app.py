@@ -80,15 +80,15 @@ def load_data():
         # Return sample data if Athena fails
         return pd.DataFrame({
             'latitude': [-26, -28, -30, -25, -33, -34, -29, -31, -32],
-            'longitude': [28, 26, 29, 25, 30, 23, 24, 22],
+            'longitude': [28, 26, 29, 25, 30, 23, 24, 22, 27],
             'precipitation': [45, 78, 12, 89, 156, 23, 67, 34, 45],
-            'year': [2023] * 8,
-            'month': [1, 2, 3, 4, 5, 6, 7, 8],
-            'day': [15, 30, 45, 60, 90, 120, 150, 180, 210],
-            'year_month': ['2023-01'] * 8,
-            'date': pd.to_datetime(['2023-01-15', '2023-01-30', '2023-02-15', '2023-02-28', '2023-03-15', '2023-03-31', '2023-04-15', '2023-04-30', '2023-05-15', '2023-05-31']),
+            'year': [2023] * 9,
+            'month': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            'day': [15, 30, 15, 30, 15, 30, 15, 30, 15],
+            'year_month': ['2023-01', '2023-01', '2023-02', '2023-02', '2023-03', '2023-03', '2023-04', '2023-04', '2023-05'],
+            'date': pd.to_datetime(['2023-01-15', '2023-01-30', '2023-02-15', '2023-02-28', '2023-03-15', '2023-03-31', '2023-04-15', '2023-04-30', '2023-05-15']),
             'drought_level': ['Moderate', 'Low', 'Moderate', 'Low', 'Moderate', 'Severe', 'Low', 'Moderate', 'Extreme'],
-            'province': ['Gauteng', 'Limpopo', 'Mpumalanga', 'KwaZulu-Natal', 'Eastern Cape', 'Western Cape', 'Northern Cape'],
+            'province': ['Gauteng', 'Limpopo', 'Mpumalanga', 'KwaZulu-Natal', 'Eastern Cape', 'Western Cape', 'Northern Cape', 'North West', 'Free State'],
             'season': ['Summer', 'Summer', 'Autumn', 'Autumn', 'Autumn', 'Winter', 'Winter', 'Winter', 'Spring'],
             'climate_risk': [0.3, 0.4, 0.5, 0.2, 0.6, 0.1, 0.7, 0.8, 0.4]
         })
