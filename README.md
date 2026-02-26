@@ -1,24 +1,59 @@
 # AfriClimate Analytics Lake
 
-Serverless climate analytics project for Southern Africa, using AWS data services and a Dash dashboard.
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Dash](https://img.shields.io/badge/Dash-Plotly-0A66C2)
+![Render](https://img.shields.io/badge/Deploy-Render-46E3B7)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+Serverless climate analytics platform for Southern Africa, built with AWS services and a production-ready Dash dashboard.
+
+## Project Snapshot
+- Problem: climate monitoring data is hard to operationalize quickly for decision-making.
+- Solution: a serverless pipeline with an interactive dashboard for drought, water security, climate risk, community impact, and carbon insights.
+- Deployment: live on Render with Gunicorn.
+- Stability mode: fallback dataset enabled for guaranteed dashboard visibility.
+- Cost profile: designed for low-cost operation on cloud free tier + lightweight query usage.
 
 ## Live Dashboard
 - URL: `https://africlimate-analytics-lake.onrender.com`
 
+## Architecture Diagram
+![Architecture](docs/architecture.png)
+
+If the image is not available yet, the architecture flow is below:
+
+```mermaid
+flowchart LR
+A[CHIRPS Climate Data] --> B[S3 Raw Zone]
+B --> C[Lambda ETL]
+C --> D[S3 Processed Zone]
+D --> E[Glue Data Catalog]
+E --> F[Athena]
+F --> G[Dash App]
+G --> H[Render Deployment]
+```
+
 ## Core Stack
-- Data storage/catalog/query: AWS S3, Glue, Athena
-- App: Dash + Plotly
+- Data layer: AWS S3, AWS Glue, Amazon Athena
+- Application layer: Dash + Plotly
 - Hosting: Render (`gunicorn app:server`)
+- Language/runtime: Python 3.11
 
 ## Repository Structure
 - `app.py`: Dash application (main entrypoint)
-- `render.yaml`: Render service configuration
+- `render.yaml`: Render deployment configuration
 - `requirements.txt`: Python dependencies
 - `.env.example`: environment variable template
 - `sql-queries/`: Athena SQL queries
 - `extensions/`: optional extension modules
 - `scripts/`: utility scripts
 - `SUBMISSION_PACKAGE/`: submission-specific artifacts
+
+## Run Modes
+| Mode | Purpose | Config |
+|---|---|---|
+| Fallback Mode (default) | Guaranteed visible dashboard data for demos/submission | `FORCE_FALLBACK_DATA=true` |
+| Athena Mode | Live cloud-backed query results | `FORCE_FALLBACK_DATA=false` + AWS env vars |
 
 ## Local Run
 ```bash
@@ -36,23 +71,52 @@ Open: `http://127.0.0.1:8050`
 - Python Version: `3.11.9` (pinned in `.python-version`)
 
 ### Required Environment Variables
-- `FORCE_FALLBACK_DATA=true` (recommended for guaranteed dashboard data)
+- `FORCE_FALLBACK_DATA=true`
 - `DASH_DEBUG_MODE=false`
 
-### Optional AWS Variables (only when Athena mode is needed)
+### Optional AWS Variables (Athena mode only)
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_DEFAULT_REGION`
 
-If you want live Athena queries, set:
-- `FORCE_FALLBACK_DATA=false`
+## Challenges and Solutions
+| Challenge | Impact | Resolution | Status |
+|---|---|---|---|
+| Athena/network instability on hosted runtime | Empty or delayed charts | Added default fallback dataset mode | Resolved |
+| Runtime/deploy mismatch across environments | Inconsistent startup behavior | Pinned Python version and standardized Gunicorn start | Resolved |
+| Callback non-trigger risk during development | Charts not updating | Verified callback wiring, IDs, and output bindings | Resolved |
 
-## Security
-- No hardcoded credentials are required in source code.
-- Keep secrets only in runtime environment variables (Render dashboard / local `.env`, never commit `.env`).
-- See `SECURITY.md` for pre-push checks and incident steps.
+## Screenshots
+- Add architecture image: `docs/architecture.png`
+- Add dashboard homepage screenshot: `docs/dashboard-home.png`
+- Add filtered state screenshot: `docs/dashboard-filters.png`
+- Add chart detail screenshot: `docs/dashboard-charts.png`
+
+## Known Limitations
+- Fallback mode uses synthetic/local data for reliability, not live Athena results.
+- Full production-grade auth/authorization is not yet implemented.
+- Alerting integrations (SNS/email workflow) are not active in dashboard runtime.
+
+## Roadmap
+1. Enable authenticated access and role-based dashboard views.
+2. Add scheduled ingestion and freshness indicator on dashboard.
+3. Integrate real-time alerting (drought/water-risk thresholds).
+4. Add unit/integration tests for ETL and callback logic.
+5. Add CI checks for linting, security scan, and deployment validation.
+
+## Security Checklist
+- No hardcoded API keys or secrets in source code.
+- Keep real credentials only in environment variables.
+- Never commit `.env` with real values.
+- Run pre-push secret scan before publishing.
+
+## Submission Highlights
+- End-to-end serverless data-to-insight architecture.
+- Five climate analytics modules with interactive filtering.
+- Deployment hardened for reliability under deadline constraints.
+- Cleaned repository and documentation aligned to final submission.
 
 ## Project Status
 - Dashboard callbacks wired and verified.
-- Fallback dataset enabled by default to avoid empty dashboards during submission/demo.
-- Render deployment configured and running via Gunicorn.
+- Fallback data path active by default for stable demo behavior.
+- Render deployment configured and live via Gunicorn.
