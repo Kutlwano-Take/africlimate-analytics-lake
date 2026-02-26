@@ -101,3 +101,7 @@ node_modules/
 .coverage
 htmlcov/
 .mypy_cache/
+
+# Render env template
+.env.render
+AfriClimate_Analytics_Lake_Submission.zip
