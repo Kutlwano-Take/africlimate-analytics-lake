@@ -86,16 +86,15 @@ Open: `http://127.0.0.1:8050`
 | Runtime/deploy mismatch across environments | Inconsistent startup behavior | Pinned Python version and standardized Gunicorn start | Resolved |
 | Callback non-trigger risk during development | Charts not updating | Verified callback wiring, IDs, and output bindings | Resolved |
 
-## Screenshots
-- Add architecture image: `docs/architecture.png`
-- Add dashboard homepage screenshot: `docs/dashboard-home.png`
-- Add filtered state screenshot: `docs/dashboard-filters.png`
-- Add chart detail screenshot: `docs/dashboard-charts.png`
+## Dashboard Overview
+### Homepage View
+![Dashboard Home](docs/dashboard-home.png)
 
-## Known Limitations
-- Fallback mode uses synthetic/local data for reliability, not live Athena results.
-- Full production-grade auth/authorization is not yet implemented.
-- Alerting integrations (SNS/email workflow) are not active in dashboard runtime.
+### Filter Interaction View
+![Dashboard Filters](docs/dashboard-filters.png)
+
+### Chart Detail View
+![Dashboard Charts](docs/dashboard-charts.png)
 
 ## Roadmap
 1. Enable authenticated access and role-based dashboard views.

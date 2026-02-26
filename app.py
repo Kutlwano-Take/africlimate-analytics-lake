@@ -152,9 +152,32 @@ def overlay_style(show):
     }
 
 
+def close_button_style(color, show):
+    return {
+        "position": "absolute",
+        "top": "10px",
+        "left": "10px",
+        "width": "30px",
+        "height": "30px",
+        "borderRadius": "999px",
+        "border": f"1px solid {color}",
+        "background": "#ffffff",
+        "color": color,
+        "fontWeight": "800",
+        "fontSize": "1rem",
+        "cursor": "pointer",
+        "display": "flex" if show else "none",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "boxShadow": "0 4px 10px rgba(15,23,42,0.18)",
+        "zIndex": "1400",
+    }
+
+
 def mk_card(key):
     return html.Div(
         [
+            html.Button("x", id=f"close-{key}", n_clicks=0, style=close_button_style(ACCENT[key], False)),
             html.H3(TITLES[key], style={"margin": "0", "fontSize": "1.2rem", "color": ACCENT[key]}),
             html.P(id=f"{key}-metric", style={"margin": "8px 0 0", "fontWeight": "700"}),
             dcc.Graph(id=f"{key}-chart", config={"displayModeBar": False}),
@@ -259,6 +282,11 @@ app.layout = html.Div(
         Output("card-climate", "style"),
         Output("card-community", "style"),
         Output("card-carbon", "style"),
+        Output("close-drought", "style"),
+        Output("close-water", "style"),
+        Output("close-climate", "style"),
+        Output("close-community", "style"),
+        Output("close-carbon", "style"),
         Output("focus-overlay", "style"),
         Output("insight-drought", "children"),
         Output("insight-water", "children"),
@@ -280,6 +308,7 @@ def update_charts(province, year, analysis_type):
     heights = {k: 500 if focus == k else 260 if focus else 320 for k in CARD_ORDER}
 
     styles = [card_style(ACCENT[k], "focus" if focus == k else "dim" if focus else "normal") for k in CARD_ORDER]
+    close_styles = [close_button_style(ACCENT[k], focus == k) for k in CARD_ORDER]
 
     if filtered.empty:
         empty = empty_figure("No data for current filters")
@@ -299,6 +328,11 @@ def update_charts(province, year, analysis_type):
             styles[2],
             styles[3],
             styles[4],
+            close_styles[0],
+            close_styles[1],
+            close_styles[2],
+            close_styles[3],
+            close_styles[4],
             overlay_style(bool(focus)),
             "Drought impact cannot be assessed because no province data is available.",
             "Water pressure cannot be assessed because no province data is available.",
@@ -346,6 +380,11 @@ def update_charts(province, year, analysis_type):
         styles[2],
         styles[3],
         styles[4],
+        close_styles[0],
+        close_styles[1],
+        close_styles[2],
+        close_styles[3],
+        close_styles[4],
         overlay_style(bool(focus)),
         f"Drought pressure is currently strongest in {drought_hotspot} based on severe and extreme events.",
         f"Water security strain appears highest in {water_hotspot} because it has the lowest average rainfall.",
@@ -353,6 +392,23 @@ def update_charts(province, year, analysis_type):
         f"Community impact intensity peaks in {community_hotspot} from the current impact index.",
         f"Carbon emissions are most elevated in {carbon_hotspot} compared with other visible provinces.",
     )
+
+
+@app.callback(
+    Output("analysis-type", "value"),
+    [
+        Input("close-drought", "n_clicks"),
+        Input("close-water", "n_clicks"),
+        Input("close-climate", "n_clicks"),
+        Input("close-community", "n_clicks"),
+        Input("close-carbon", "n_clicks"),
+    ],
+    prevent_initial_call=True,
+)
+def close_focus(close_drought, close_water, close_climate, close_community, close_carbon):
+    if any([close_drought, close_water, close_climate, close_community, close_carbon]):
+        return "All"
+    return dash.no_update
 
 
 if __name__ == "__main__":
