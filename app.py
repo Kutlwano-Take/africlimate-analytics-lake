@@ -1,12 +1,16 @@
 import os
 
-import boto3
 import dash
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 from dash import Input, Output, dcc, html
 from dotenv import load_dotenv
+
+try:
+    import boto3
+except Exception:
+    boto3 = None
 
 try:
     import awswrangler as wr
@@ -82,7 +86,8 @@ def load_data():
     if os.getenv("FORCE_FALLBACK_DATA", "true").lower() == "true":
         print("FORCE_FALLBACK_DATA=true; using local fallback data.")
         return enrich_dataframe(build_fallback_data())
-    if wr is None:
+    if wr is None or boto3 is None:
+        print("AWS dependencies unavailable; using local fallback data.")
         return enrich_dataframe(build_fallback_data())
     boto3.setup_default_session(
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),

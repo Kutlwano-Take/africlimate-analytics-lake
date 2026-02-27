@@ -1,0 +1,12 @@
+.git
+__pycache__
+*.pyc
+docs
+extensions
+scripts
+sql-queries
+SUBMISSION_PACKAGE
+lambda_etl_function.py
+setup_infrastructure.py
+SUBMISSION_README.md
+.env
