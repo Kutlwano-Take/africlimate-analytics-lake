@@ -132,10 +132,10 @@ def card_style(color, mode="normal"):
             {
                 "position": "fixed",
                 "left": "50%",
-                "top": "52%",
+                "top": "50%",
                 "transform": "translate(-50%, -50%) scale(1.04)",
-                "width": "min(94vw, 980px)",
-                "maxHeight": "86vh",
+                "width": "min(96vw, 980px)",
+                "maxHeight": "82vh",
                 "overflowY": "auto",
                 "zIndex": "1200",
                 "boxShadow": "0 20px 55px rgba(15,23,42,0.34)",
@@ -182,12 +182,13 @@ def close_button_style(color, show):
 def mk_card(key):
     return html.Div(
         [
-            html.Button("x", id=f"close-{key}", n_clicks=0, style=close_button_style(ACCENT[key], False)),
+            html.Button("x", id=f"close-{key}", n_clicks=0, className="close-button", style=close_button_style(ACCENT[key], False)),
             html.H3(TITLES[key], style={"margin": "0", "fontSize": "1.2rem", "color": ACCENT[key]}),
             html.P(id=f"{key}-metric", style={"margin": "8px 0 0", "fontWeight": "700"}),
-            dcc.Graph(id=f"{key}-chart", config={"displayModeBar": False}),
+            dcc.Graph(id=f"{key}-chart", className="card-graph", config={"displayModeBar": False, "responsive": True}, style={"minHeight": "220px"}),
         ],
         id=f"card-{key}",
+        className="dashboard-card",
         style=card_style(ACCENT[key]),
     )
 
@@ -222,19 +223,24 @@ def hotspot(series, low=False):
 df = load_data()
 print(f"Loaded rows: {len(df)}")
 
-app = dash.Dash(__name__, suppress_callback_exceptions=True)
+app = dash.Dash(
+    __name__,
+    suppress_callback_exceptions=True,
+    meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1"}],
+)
 server = app.server
 app.title = "AfriClimate Analytics Platform"
 
 app.layout = html.Div(
     [
-        html.Div(id="focus-overlay", style=overlay_style(False)),
+        html.Div(id="focus-overlay", className="focus-overlay", style=overlay_style(False)),
         html.Div(
             [
-                html.H1("AfriClimate Climate Intelligence Dashboard", style={"margin": "0", "fontSize": "2.3rem", "fontWeight": "800", "color": "#0b3b84"}),
-                html.P("Real-time analytics for drought, water security, climate risk, community impact, and carbon pressure.", style={"margin": "10px 0 0", "fontSize": "1.04rem", "color": "#334155"}),
+                html.H1("AfriClimate Climate Intelligence Dashboard", style={"margin": "0", "fontSize": "clamp(1.25rem, 3.8vw, 2.3rem)", "fontWeight": "800", "color": "#0b3b84", "lineHeight": "1.15"}),
+                html.P("Real-time analytics for drought, water security, climate risk, community impact, and carbon pressure.", style={"margin": "10px 0 0", "fontSize": "clamp(0.88rem, 2vw, 1.04rem)", "color": "#334155"}),
             ],
-            style={"padding": "1.8rem 1.4rem", "maxWidth": "1250px", "margin": "0 auto"},
+            className="dashboard-header",
+            style={"padding": "clamp(1rem, 3vw, 1.8rem) clamp(0.6rem, 2.5vw, 1.4rem)", "maxWidth": "1250px", "margin": "0 auto"},
         ),
         html.Div(
             [
@@ -246,9 +252,10 @@ app.layout = html.Div(
                 html.Div([html.P("Years", style={"margin": "0 0 8px", "fontWeight": "700", "fontSize": "0.85rem"}), dcc.Dropdown(id="year-filter", options=[{"label": "All", "value": "All"}] + [{"label": str(y), "value": int(y)} for y in sorted(df["year"].dropna().astype(int).unique())], value="All", clearable=False)]),
                 html.Div([html.P("5 Analysis Modules", style={"margin": "0 0 8px", "fontWeight": "700", "fontSize": "0.85rem"}), dcc.Dropdown(id="analysis-type", options=[{"label": "All", "value": "All"}, {"label": "Drought Analysis", "value": "drought"}, {"label": "Water Security", "value": "water"}, {"label": "Climate Risk", "value": "climate"}, {"label": "Community Impact", "value": "community"}, {"label": "Carbon Emissions", "value": "carbon"}], value="All", clearable=False)]),
             ],
-            style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(230px, 1fr))", "gap": "1rem", "padding": "1.15rem", "maxWidth": "1250px", "margin": "0 auto", "background": "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(241,245,255,0.92))", "border": "1px solid #cbd5e1", "borderRadius": "18px", "boxShadow": "0 12px 28px rgba(15, 23, 42, 0.1)"},
+            className="filter-panel",
+            style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(200px, 1fr))", "gap": "1rem", "padding": "clamp(0.75rem, 2vw, 1.15rem)", "maxWidth": "1250px", "margin": "0 auto", "background": "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(241,245,255,0.92))", "border": "1px solid #cbd5e1", "borderRadius": "18px", "boxShadow": "0 12px 28px rgba(15, 23, 42, 0.1)"},
         ),
-        html.Div([mk_card("drought"), mk_card("water"), mk_card("climate"), mk_card("community"), mk_card("carbon")], id="dashboard-grid", style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(340px, 1fr))", "gap": "1.15rem", "padding": "1rem 0 0.4rem", "maxWidth": "1250px", "margin": "1rem auto 0"}),
+        html.Div([mk_card("drought"), mk_card("water"), mk_card("climate"), mk_card("community"), mk_card("carbon")], id="dashboard-grid", className="dashboard-grid", style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(280px, 1fr))", "gap": "1.15rem", "padding": "1rem 0 0.4rem", "maxWidth": "1250px", "margin": "1rem auto 0"}),
         html.Div(
             [
                 html.H3("Provincial Effect Highlights", style={"margin": "0 0 12px", "fontSize": "1.08rem", "fontWeight": "800", "color": "#0f172a"}),
@@ -263,10 +270,12 @@ app.layout = html.Div(
                     style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(210px, 1fr))", "gap": "0.7rem"},
                 ),
             ],
-            style={"maxWidth": "1250px", "margin": "0.4rem auto 2rem", "padding": "1rem", "background": "linear-gradient(135deg, rgba(255,255,255,0.87), rgba(240,249,255,0.9))", "borderRadius": "16px", "border": "1px solid #cbd5e1", "boxShadow": "0 8px 22px rgba(15, 23, 42, 0.1)"},
+            className="insights-panel",
+            style={"maxWidth": "1250px", "margin": "0.4rem auto 2rem", "padding": "clamp(0.75rem, 2vw, 1rem)", "background": "linear-gradient(135deg, rgba(255,255,255,0.87), rgba(240,249,255,0.9))", "borderRadius": "16px", "border": "1px solid #cbd5e1", "boxShadow": "0 8px 22px rgba(15, 23, 42, 0.1)"},
         ),
     ],
-    style={"minHeight": "100vh", "padding": "0 1rem", "background": "radial-gradient(circle at 10% 12%, #dbeafe 0%, #eff6ff 28%, #f8fafc 62%, #f1f5f9 100%)", "fontFamily": "Poppins, Segoe UI, sans-serif"},
+    className="page-shell",
+    style={"minHeight": "100vh", "padding": "0 clamp(0.4rem, 2.5vw, 1rem)", "background": "radial-gradient(circle at 10% 12%, #dbeafe 0%, #eff6ff 28%, #f8fafc 62%, #f1f5f9 100%)", "fontFamily": "Poppins, Segoe UI, sans-serif"},
 )
 
 
