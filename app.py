@@ -122,6 +122,10 @@ def card_style(color, mode="normal"):
         "borderTop": f"4px solid {color}",
         "borderRadius": "18px",
         "padding": "1rem",
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "0.55rem",
+        "overflow": "hidden",
         "boxShadow": "0 10px 28px rgba(15,23,42,0.11)",
         "transition": "all 0.35s ease",
         "position": "relative",
@@ -133,7 +137,7 @@ def card_style(color, mode="normal"):
                 "position": "fixed",
                 "left": "50%",
                 "top": "50%",
-                "transform": "translate(-50%, -50%) scale(1.04)",
+                "transform": "translate(-50%, -50%)",
                 "width": "min(96vw, 980px)",
                 "maxHeight": "82vh",
                 "overflowY": "auto",
@@ -185,7 +189,7 @@ def mk_card(key):
             html.Button("x", id=f"close-{key}", n_clicks=0, className="close-button", style=close_button_style(ACCENT[key], False)),
             html.H3(TITLES[key], style={"margin": "0", "fontSize": "1.2rem", "color": ACCENT[key]}),
             html.P(id=f"{key}-metric", style={"margin": "8px 0 0", "fontWeight": "700"}),
-            dcc.Graph(id=f"{key}-chart", className="card-graph", config={"displayModeBar": False, "responsive": True}, style={"minHeight": "220px"}),
+            dcc.Graph(id=f"{key}-chart", className="card-graph", config={"displayModeBar": False, "responsive": True}, style={"minHeight": "260px", "width": "100%"}),
         ],
         id=f"card-{key}",
         className="dashboard-card",
@@ -198,13 +202,13 @@ def styled_figure(fig, title, height):
         template="plotly_white",
         title={"text": title, "font": {"size": 16, "color": "#0f172a"}},
         height=height,
-        margin={"l": 28, "r": 16, "t": 55, "b": 28},
+        margin={"l": 38, "r": 24, "t": 58, "b": 46},
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         font={"family": "Poppins, Segoe UI, sans-serif", "color": "#0f172a"},
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-    fig.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+    fig.update_xaxes(showgrid=True, gridcolor="#e2e8f0", automargin=True)
+    fig.update_yaxes(showgrid=True, gridcolor="#e2e8f0", automargin=True)
     return fig
 
 
@@ -255,7 +259,7 @@ app.layout = html.Div(
             className="filter-panel",
             style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(200px, 1fr))", "gap": "1rem", "padding": "clamp(0.75rem, 2vw, 1.15rem)", "maxWidth": "1250px", "margin": "0 auto", "background": "linear-gradient(135deg, rgba(255,255,255,0.85), rgba(241,245,255,0.92))", "border": "1px solid #cbd5e1", "borderRadius": "18px", "boxShadow": "0 12px 28px rgba(15, 23, 42, 0.1)"},
         ),
-        html.Div([mk_card("drought"), mk_card("water"), mk_card("climate"), mk_card("community"), mk_card("carbon")], id="dashboard-grid", className="dashboard-grid", style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(280px, 1fr))", "gap": "1.15rem", "padding": "1rem 0 0.4rem", "maxWidth": "1250px", "margin": "1rem auto 0"}),
+        html.Div([mk_card("drought"), mk_card("water"), mk_card("climate"), mk_card("community"), mk_card("carbon")], id="dashboard-grid", className="dashboard-grid", style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(280px, 1fr))", "columnGap": "1.25rem", "rowGap": "1.35rem", "padding": "1rem 0 0.6rem", "maxWidth": "1250px", "margin": "1rem auto 0"}),
         html.Div(
             [
                 html.H3("Provincial Effect Highlights", style={"margin": "0 0 12px", "fontSize": "1.08rem", "fontWeight": "800", "color": "#0f172a"}),
@@ -319,7 +323,7 @@ def update_charts(province, year, analysis_type):
         filtered = filtered[filtered["year"] == int(year)]
 
     focus = analysis_type if analysis_type in CARD_ORDER else None
-    heights = {k: 500 if focus == k else 260 if focus else 320 for k in CARD_ORDER}
+    heights = {k: 520 if focus == k else 290 if focus else 360 for k in CARD_ORDER}
 
     styles = [card_style(ACCENT[k], "focus" if focus == k else "dim" if focus else "normal") for k in CARD_ORDER]
     close_styles = [close_button_style(ACCENT[k], focus == k) for k in CARD_ORDER]
@@ -363,8 +367,10 @@ def update_charts(province, year, analysis_type):
     climate_fig = styled_figure(go.Figure(go.Scatter(x=climate["month"], y=climate["climate_risk"], mode="lines+markers", line={"color": ACCENT["climate"], "width": 3}, marker={"size": 8})), "Climate Risk Trend", heights["climate"])
     community = filtered.groupby("province", as_index=False)["community_impact"].mean().sort_values("community_impact", ascending=False)
     community_fig = styled_figure(go.Figure(go.Bar(x=community["province"], y=community["community_impact"], marker_color=ACCENT["community"])), "Community Impact by Province", heights["community"])
+    community_fig.update_xaxes(tickangle=-25)
     carbon = filtered.groupby("province", as_index=False)["carbon_emissions"].mean().sort_values("carbon_emissions", ascending=False)
     carbon_fig = styled_figure(go.Figure(go.Bar(x=carbon["province"], y=carbon["carbon_emissions"], marker_color=ACCENT["carbon"])), "Average Carbon Emissions", heights["carbon"])
+    carbon_fig.update_xaxes(tickangle=-25)
 
     drought_metric = f"{int((filtered['drought_level'].isin(['Severe', 'Extreme'])).sum())} severe or extreme records"
     water_metric = f"{filtered['precipitation'].mean():.1f} mm average rainfall"
