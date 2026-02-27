@@ -240,7 +240,7 @@ app.layout = html.Div(
         html.Div(id="focus-overlay", className="focus-overlay", style=overlay_style(False)),
         html.Div(
             [
-                html.H1("AfriClimate Climate Intelligence Dashboard", style={"margin": "0", "fontSize": "clamp(1.25rem, 3.8vw, 2.3rem)", "fontWeight": "800", "color": "#0b3b84", "lineHeight": "1.15"}),
+                html.H1("AfriClimate Intelligence Dashboard", style={"margin": "0", "fontSize": "clamp(1.25rem, 3.8vw, 2.3rem)", "fontWeight": "800", "color": "#0b3b84", "lineHeight": "1.15"}),
                 html.P("Real-time analytics for drought, water security, climate risk, community impact, and carbon pressure.", style={"margin": "10px 0 0", "fontSize": "clamp(0.88rem, 2vw, 1.04rem)", "color": "#334155"}),
             ],
             className="dashboard-header",
