@@ -1,5 +1,5 @@
 # AfriClimate Analytics Lake - Python Dependencies
-# Render.com compatible version
+# Vercel-compatible version
 
 # AWS SDK
 boto3>=1.26.0

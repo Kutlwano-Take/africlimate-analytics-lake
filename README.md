@@ -1,8 +1,8 @@
 # AfriClimate Analytics Lake
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Dash](https://img.shields.io/badge/Dash-Plotly-0A66C2)
-![Render](https://img.shields.io/badge/Deploy-Render-46E3B7)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 Serverless climate analytics platform for Southern Africa, built with AWS services and a production-ready Dash dashboard.
@@ -10,12 +10,12 @@ Serverless climate analytics platform for Southern Africa, built with AWS servic
 ## Project Snapshot
 - Problem: climate monitoring data is hard to operationalize quickly for decision-making.
 - Solution: a serverless pipeline with an interactive dashboard for drought, water security, climate risk, community impact, and carbon insights.
-- Deployment: live on Render with Gunicorn.
+- Deployment: live on Vercel.
 - Stability mode: fallback dataset enabled for guaranteed dashboard visibility.
 - Cost profile: designed for low-cost operation on cloud free tier + lightweight query usage.
 
 ## Live Dashboard
-- URL: `https://africlimate-analytics-lake.onrender.com`
+- URL: `https://kutlwano-take-africlimate-analytics-eight.vercel.app/`
 
 ## Architecture Diagram
 ![Architecture](docs/architecture.png)
@@ -30,18 +30,19 @@ C --> D[S3 Processed Zone]
 D --> E[Glue Data Catalog]
 E --> F[Athena]
 F --> G[Dash App]
-G --> H[Render Deployment]
+G --> H[Vercel Deployment]
 ```
 
 ## Core Stack
 - Data layer: AWS S3, AWS Glue, Amazon Athena
 - Application layer: Dash + Plotly
-- Hosting: Render (`gunicorn app:server`)
-- Language/runtime: Python 3.11
+- Hosting: Vercel (Python serverless function)
+- Language/runtime: Python 3.12
 
 ## Repository Structure
 - `app.py`: Dash application (main entrypoint)
-- `render.yaml`: Render deployment configuration
+- `api/index.py`: Vercel Python serverless entrypoint
+- `vercel.json`: Vercel routing configuration
 - `requirements.txt`: Python dependencies
 - `.env.example`: environment variable template
 - `sql-queries/`: Athena SQL queries
@@ -65,10 +66,11 @@ python app.py
 
 Open: `http://127.0.0.1:8050`
 
-## Deployment (Render)
-- Build Command: `pip install -r requirements.txt`
-- Start Command: `gunicorn app:server --workers 1 --threads 2 --timeout 120`
-- Python Version: `3.11.9` (pinned in `.python-version`)
+## Deployment (Vercel)
+- Framework Preset: `Other`
+- Root Directory: `./`
+- Python Version: `3.12` (pinned in `.python-version`)
+- Vercel config files: `vercel.json` + `api/index.py`
 
 ### Required Environment Variables
 - `FORCE_FALLBACK_DATA=true`
@@ -83,7 +85,7 @@ Open: `http://127.0.0.1:8050`
 | Challenge | Impact | Resolution | Status |
 |---|---|---|---|
 | Athena/network instability on hosted runtime | Empty or delayed charts | Added default fallback dataset mode | Resolved |
-| Runtime/deploy mismatch across environments | Inconsistent startup behavior | Pinned Python version and standardized Gunicorn start | Resolved |
+| Runtime/deploy mismatch across environments | Inconsistent startup behavior | Pinned Python version and aligned Vercel serverless entrypoint | Resolved |
 | Callback non-trigger risk during development | Charts not updating | Verified callback wiring, IDs, and output bindings | Resolved |
 
 ## Dashboard Overview
@@ -118,4 +120,4 @@ Open: `http://127.0.0.1:8050`
 ## Project Status
 - Dashboard callbacks wired and verified.
 - Fallback data path active by default for stable demo behavior.
-- Render deployment configured and live via Gunicorn.
+- Vercel deployment configured and live.
