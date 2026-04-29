@@ -103,3 +103,6 @@ htmlcov/
 .mypy_cache/
 
 AfriClimate_Analytics_Lake_Submission.zip
+
+.vercel
+.env*.local
